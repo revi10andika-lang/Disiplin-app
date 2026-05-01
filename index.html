@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShiftSync - Absensi App</title>
+    <title>Disiplin v1 - Absensi App</title>
     
-    <!-- Tailwind & Icons -->
+    <!-- Framework & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,102 +15,245 @@
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .hidden-el { display: none !important; }
+        .tab-active { background-color: #eff6ff; color: #1d4ed8; border-radius: 0.75rem; }
     </style>
 </head>
 <body class="text-slate-800 pb-12">
 
-    <!-- LOGIN SCREEN -->
+    <!-- 1. HALAMAN LOGIN -->
     <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 fade-in">
         <div class="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden">
             <div class="bg-blue-600 p-8 text-center text-white">
-                <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                    <i data-lucide="clock" class="w-8 h-8"></i>
-                </div>
-                <h1 class="text-3xl font-bold tracking-tight mb-2">OnTime</h1>
-                <p class="text-blue-100">Sistem Absensi Pribadi</p>
+                <i data-lucide="clock" class="w-12 h-12 mx-auto mb-4 opacity-50 bg-white/20 p-2 rounded-xl"></i>
+                <h1 class="text-3xl font-bold mb-1">OnTime</h1>
+                <p class="text-blue-100 text-sm">Sistem Absensi Shift</p>
             </div>
             <div class="p-8">
                 <div id="login-error" class="hidden-el bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-6 flex items-center gap-2">
-                    <i data-lucide="alert-circle" class="w-4 h-4"></i>
-                    <span>ID atau PIN salah!</span>
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i> ID atau PIN salah!
                 </div>
-                <form id="login-form" class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-2">ID Karyawan</label>
-                        <input type="text" id="input-id" placeholder="pagi / admin" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-2">PIN Akses</label>
-                        <input type="password" id="input-pin" placeholder="1234 atau admin" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95">Masuk</button>
+                <form id="login-form" class="space-y-4">
+                    <input type="text" id="input-id" placeholder="ID (pagi / siang / admin)" required class="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="password" id="input-pin" placeholder="PIN (1234 atau admin)" required class="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95">Masuk Sekarang</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- 2. APLIKASI UTAMA -->
     <div id="main-app" class="hidden-el fade-in">
+        <!-- Header -->
         <header class="bg-white shadow-sm sticky top-0 z-10 p-4">
             <div class="max-w-4xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <div class="bg-blue-600 text-white p-2 rounded-lg"><i data-lucide="clock" class="w-5 h-5"></i></div>
-                    <h1 class="text-xl font-bold">Disiplin v1</h1>
+                    <div class="bg-blue-600 text-white p-2 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+                    <h1 class="font-bold text-xl md:text-2xl">Disiplin v1</h1>
                 </div>
-                <button onclick="handleLogout()" class="text-red-500 font-semibold">Logout</button>
+                <div class="flex items-center gap-3">
+                    <span id="user-display" class="hidden md:block text-sm font-medium bg-gray-100 px-3 py-1 rounded-full text-gray-600">User</span>
+                    <button onclick="handleLogout()" class="text-red-500 p-2 hover:bg-red-50 rounded-full"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+                </div>
             </div>
         </header>
-        
-        <main class="max-w-4xl mx-auto px-4 mt-10 text-center">
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg">
-                <h2 id="display-date" class="text-lg opacity-90 mb-2">...</h2>
-                <div id="display-time" class="text-5xl md:text-6xl font-bold mb-4">00:00:00</div>
-                <button id="btn-clock-in" onclick="handleClockIn()" class="bg-white text-blue-700 font-bold py-3 px-8 rounded-full shadow-md hover:bg-blue-50 transition-all">CLOCK IN</button>
-                <div id="msg-selesai" class="hidden-el bg-green-500 text-white p-3 rounded-xl mt-4">Berhasil Absen!</div>
+
+        <!-- Navigasi Tab -->
+        <nav class="max-w-4xl mx-auto px-4 mt-6">
+            <div class="flex bg-white p-1 rounded-xl shadow-sm border overflow-x-auto whitespace-nowrap">
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-6 py-2.5 font-medium transition-all tab-active">Absen</button>
+                <button onclick="switchTab('riwayat')" id="btn-riwayat" class="tab-btn px-6 py-2.5 font-medium text-gray-500 hover:bg-gray-50 transition-all">Riwayat</button>
+                <button onclick="switchTab('admin')" id="btn-admin" class="tab-btn hidden-el px-6 py-2.5 font-medium text-gray-500 hover:bg-gray-50 transition-all">Admin Shift</button>
             </div>
+        </nav>
+
+        <main class="max-w-4xl mx-auto px-4 mt-6">
+            
+            <!-- TAB: ABSENSI -->
+            <div id="tab-dashboard" class="space-y-6">
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-lg text-center">
+                    <h2 id="display-date" class="text-lg opacity-80 mb-1">Memuat...</h2>
+                    <div id="display-time" class="text-5xl md:text-7xl font-bold tracking-tighter mb-6">00:00:00</div>
+                    
+                    <div id="shift-box" class="bg-white/10 p-4 rounded-2xl max-w-xs mx-auto backdrop-blur-md border border-white/20">
+                        <label class="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Pilih Shift Kerja</label>
+                        <select id="select-shift" class="w-full bg-white text-gray-800 rounded-xl p-2.5 font-bold outline-none"></select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="card-in" class="bg-white p-5 rounded-2xl shadow-sm border-2 border-transparent flex justify-between items-center transition-all">
+                        <div><p class="text-xs font-bold text-gray-400 uppercase">Jam Masuk</p><p id="txt-in" class="text-2xl font-black text-gray-800">--:--</p></div>
+                        <div class="bg-gray-100 p-3 rounded-full text-gray-400"><i data-lucide="log-in" class="w-6 h-6"></i></div>
+                    </div>
+                    <div id="card-out" class="bg-white p-5 rounded-2xl shadow-sm border-2 border-transparent flex justify-between items-center transition-all">
+                        <div><p class="text-xs font-bold text-gray-400 uppercase">Jam Pulang</p><p id="txt-out" class="text-2xl font-black text-gray-800">--:--</p></div>
+                        <div class="bg-gray-100 p-3 rounded-full text-gray-400"><i data-lucide="log-out" class="w-6 h-6"></i></div>
+                    </div>
+                </div>
+
+                <div class="text-center pb-8">
+                    <button id="btn-action" onclick="processAbsen()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-black py-5 px-16 rounded-2xl shadow-xl shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-3 mx-auto">
+                        <i data-lucide="fingerprint" class="w-6 h-6"></i> CLOCK IN SEKARANG
+                    </button>
+                    <div id="msg-done" class="hidden-el bg-green-100 text-green-700 p-4 rounded-2xl font-bold flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i> Absensi Selesai! Kerja Bagus.
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: RIWAYAT -->
+            <div id="tab-riwayat" class="hidden-el space-y-4">
+                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                    <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
+                        <h3 class="font-bold">Rekapan Absensi</h3>
+                        <i data-lucide="file-text" class="w-4 h-4 text-gray-400"></i>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 text-gray-500 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-4">Tanggal</th><th class="p-4">Shift</th><th class="p-4">Masuk</th><th class="p-4">Pulang</th><th class="p-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-riwayat" class="divide-y"></tbody>
+                        </table>
+                        <div id="riwayat-empty" class="p-10 text-center text-gray-400">Belum ada data.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: ADMIN (PENGATURAN SHIFT) -->
+            <div id="tab-admin" class="hidden-el space-y-4">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border">
+                    <h3 class="text-lg font-bold mb-4">Pengaturan Shift Kerja</h3>
+                    <div id="admin-shift-list" class="space-y-4"></div>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <script>
-        const mockUsers = {
-            pagi: { id: 'pagi', nama: 'Revi Andika', pin: '1234' },
-            admin: { id: 'admin', nama: 'Administrator', pin: 'admin' }
+        // --- DATA & STATE ---
+        const users = {
+            pagi: { id: 'pagi', nama: 'Revi Pagi', pin: '1234', role: 'karyawan' },
+            siang: { id: 'siang', nama: 'Revi Siang', pin: '1234', role: 'karyawan' },
+            admin: { id: 'admin', nama: 'Administrator', pin: 'admin', role: 'admin' }
         };
 
-        // Initialize Icons
+        let shifts = {
+            pagi: { id: 'pagi', nama: 'Shift Pagi', mulai: '08:00', selesai: '16:00', toleransi: 15 },
+            siang: { id: 'siang', nama: 'Shift Siang', mulai: '14:00', selesai: '21:00', toleransi: 15 }
+        };
+
+        let currentUser = null;
+        let status = 'ready'; // ready -> in -> done
+        let riwayat = [];
+
+        // --- CORE FUNCTIONS ---
         lucide.createIcons();
 
-        // Clock Function
-        setInterval(() => {
+        function updateClock() {
             const now = new Date();
-            if(document.getElementById('display-time')) {
-                document.getElementById('display-time').innerText = now.toLocaleTimeString('id-ID');
-                document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const timeEl = document.getElementById('display-time');
+            if (timeEl) {
+                timeEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+                document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
             }
-        }, 1000);
+        }
+        setInterval(updateClock, 1000);
 
-        // Login Logic
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const id = document.getElementById('input-id').value;
-            const pin = document.getElementById('input-pin').value;
-            
-            if (mockUsers[id] && mockUsers[id].pin === pin) {
+            const u = users[document.getElementById('input-id').value];
+            const p = document.getElementById('input-pin').value;
+
+            if (u && u.pin === p) {
+                currentUser = u;
                 document.getElementById('login-screen').classList.add('hidden-el');
                 document.getElementById('main-app').classList.remove('hidden-el');
+                document.getElementById('user-display').innerText = u.nama;
+                
+                if (u.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden-el');
+                renderShiftSelect();
+                lucide.createIcons();
             } else {
                 document.getElementById('login-error').classList.remove('hidden-el');
             }
         });
 
-        function handleClockIn() {
-            document.getElementById('btn-clock-in').classList.add('hidden-el');
-            document.getElementById('msg-selesai').classList.remove('hidden-el');
+        function renderShiftSelect() {
+            const sel = document.getElementById('select-shift');
+            sel.innerHTML = Object.values(shifts).map(s => `<option value="${s.id}">${s.nama} (${s.mulai})</option>`).join('');
         }
 
-        function handleLogout() {
-            location.reload(); // Cara paling cepat untuk logout & reset state
+        function switchTab(t) {
+            ['dashboard', 'riwayat', 'admin'].forEach(tab => {
+                document.getElementById('tab-' + tab).classList.add('hidden-el');
+                document.getElementById('btn-' + tab).classList.remove('tab-active');
+            });
+            document.getElementById('tab-' + t).classList.remove('hidden-el');
+            document.getElementById('btn-' + t).classList.add('tab-active');
+            if(t === 'riwayat') renderRiwayat();
+            if(t === 'admin') renderAdmin();
         }
+
+        function processAbsen() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            
+            if (status === 'ready') {
+                status = 'in';
+                document.getElementById('txt-in').innerText = timeStr;
+                document.getElementById('card-in').classList.add('border-blue-500', 'bg-blue-50');
+                document.getElementById('btn-action').innerHTML = `<i data-lucide="log-out"></i> CLOCK OUT SEKARANG`;
+                document.getElementById('btn-action').classList.replace('bg-blue-600', 'bg-orange-500');
+                document.getElementById('shift-box').classList.add('opacity-50', 'pointer-events-none');
+                
+                const s = shifts[document.getElementById('select-shift').value];
+                riwayat.unshift({ tgl: new Date().toLocaleDateString('id-ID'), shift: s.nama, in: timeStr, out: '--:--', st: 'Hadir' });
+            } else if (status === 'in') {
+                status = 'done';
+                document.getElementById('txt-out').innerText = timeStr;
+                document.getElementById('card-out').classList.add('border-green-500', 'bg-green-50');
+                document.getElementById('btn-action').classList.add('hidden-el');
+                document.getElementById('msg-done').classList.remove('hidden-el');
+                riwayat[0].out = timeStr;
+            }
+            lucide.createIcons();
+        }
+
+        function renderRiwayat() {
+            const container = document.getElementById('table-riwayat');
+            const empty = document.getElementById('riwayat-empty');
+            if (riwayat.length > 0) {
+                empty.classList.add('hidden-el');
+                container.innerHTML = riwayat.map(r => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 font-medium">${r.tgl}</td>
+                        <td class="p-4 text-gray-600">${r.shift}</td>
+                        <td class="p-4">${r.in}</td>
+                        <td class="p-4">${r.out}</td>
+                        <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">${r.st}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderAdmin() {
+            const list = document.getElementById('admin-shift-list');
+            list.innerHTML = Object.values(shifts).map(s => `
+                <div class="p-4 bg-gray-50 rounded-xl border space-y-3">
+                    <p class="font-bold text-blue-700">${s.nama}</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="time" value="${s.mulai}" onchange="shifts['${s.id}'].mulai = this.value; renderShiftSelect();" class="p-2 rounded border">
+                        <input type="time" value="${s.selesai}" onchange="shifts['${s.id}'].selesai = this.value;" class="p-2 rounded border">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleLogout() { location.reload(); }
     </script>
 </body>
 </html>
