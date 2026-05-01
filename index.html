@@ -8,25 +8,26 @@
     <!-- Framework & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; display: flex; flex-direction: column; min-h-screen; }
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .hidden-el { display: none !important; }
         .tab-active { background-color: #eff6ff; color: #1d4ed8; border-radius: 0.75rem; }
+        main { flex: 1; }
     </style>
 </head>
-<body class="text-slate-800 pb-12">
+<body class="text-slate-800 min-h-screen">
 
     <!-- 1. HALAMAN LOGIN -->
     <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 fade-in">
-        <div class="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden border border-gray-100">
             <div class="bg-blue-600 p-8 text-center text-white">
-                <i data-lucide="clock" class="w-12 h-12 mx-auto mb-4 opacity-50 bg-white/20 p-2 rounded-xl"></i>
-                <h1 class="text-3xl font-bold mb-1">OnTime</h1>
-                <p class="text-blue-100 text-sm">Sistem Absensi Shift</p>
+                <i data-lucide="clock" class="w-12 h-12 mx-auto mb-4 bg-white/20 p-2 rounded-xl"></i>
+                <h1 class="text-3xl font-black mb-1">OnTime</h1>
+                <p class="text-blue-100 text-sm">Sistem Absensi Perangkat</p>
             </div>
             <div class="p-8">
                 <div id="login-error" class="hidden-el bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-6 flex items-center gap-2">
@@ -34,98 +35,101 @@
                 </div>
                 <form id="login-form" class="space-y-4">
                     <input type="text" id="input-id" placeholder="ID (pagi / siang / admin)" required class="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    <input type="password" id="input-pin" placeholder="PIN (1234 atau admin)" required class="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95">Masuk Sekarang</button>
+                    <input type="password" id="input-pin" placeholder="PIN" required class="w-full px-4 py-3 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">Masuk</button>
                 </form>
             </div>
         </div>
     </div>
 
     <!-- 2. APLIKASI UTAMA -->
-    <div id="main-app" class="hidden-el fade-in">
+    <div id="main-app" class="hidden-el fade-in flex-grow">
         <!-- Header -->
-        <header class="bg-white shadow-sm sticky top-0 z-10 p-4">
+        <header class="bg-white shadow-sm sticky top-0 z-10 p-4 border-b">
             <div class="max-w-4xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <div class="bg-blue-600 text-white p-2 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                    <h1 class="font-bold text-xl md:text-2xl">Disiplin v1</h1>
+                    <h1 class="font-black text-xl">Disiplin v1</h1>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span id="user-display" class="hidden md:block text-sm font-medium bg-gray-100 px-3 py-1 rounded-full text-gray-600">User</span>
-                    <button onclick="handleLogout()" class="text-red-500 p-2 hover:bg-red-50 rounded-full"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+                    <span id="user-display" class="hidden md:block text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-gray-600">User</span>
+                    <button onclick="handleLogout()" class="text-red-500 p-2 hover:bg-red-50 rounded-full transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i></button>
                 </div>
             </div>
         </header>
 
         <!-- Navigasi Tab -->
         <nav class="max-w-4xl mx-auto px-4 mt-6">
-            <div class="flex bg-white p-1 rounded-xl shadow-sm border overflow-x-auto whitespace-nowrap">
-                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-6 py-2.5 font-medium transition-all tab-active">Absen</button>
-                <button onclick="switchTab('riwayat')" id="btn-riwayat" class="tab-btn px-6 py-2.5 font-medium text-gray-500 hover:bg-gray-50 transition-all">Riwayat</button>
-                <button onclick="switchTab('admin')" id="btn-admin" class="tab-btn hidden-el px-6 py-2.5 font-medium text-gray-500 hover:bg-gray-50 transition-all">Admin Shift</button>
+            <div class="flex bg-white p-1 rounded-xl shadow-sm border overflow-x-auto">
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-6 py-2.5 font-bold transition-all tab-active">Absen</button>
+                <button onclick="switchTab('riwayat')" id="btn-riwayat" class="tab-btn px-6 py-2.5 font-bold text-gray-400 hover:bg-gray-50 transition-all">Riwayat</button>
+                <button onclick="switchTab('admin')" id="btn-admin" class="tab-btn hidden-el px-6 py-2.5 font-bold text-gray-400 hover:bg-gray-50 transition-all">Admin</button>
             </div>
         </nav>
 
-        <main class="max-w-4xl mx-auto px-4 mt-6">
+        <main class="max-w-4xl mx-auto px-4 mt-6 pb-20">
             
             <!-- TAB: ABSENSI -->
             <div id="tab-dashboard" class="space-y-6">
-                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-lg text-center">
-                    <h2 id="display-date" class="text-lg opacity-80 mb-1">Memuat...</h2>
-                    <div id="display-time" class="text-5xl md:text-7xl font-bold tracking-tighter mb-6">00:00:00</div>
-                    
-                    <div id="shift-box" class="bg-white/10 p-4 rounded-2xl max-w-xs mx-auto backdrop-blur-md border border-white/20">
-                        <label class="block text-xs font-bold uppercase tracking-widest mb-2 opacity-70">Pilih Shift Kerja</label>
-                        <select id="select-shift" class="w-full bg-white text-gray-800 rounded-xl p-2.5 font-bold outline-none"></select>
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-3xl p-8 text-white shadow-xl text-center relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 id="display-date" class="text-sm font-bold uppercase tracking-widest opacity-70 mb-2">Memuat...</h2>
+                        <div id="display-time" class="text-6xl md:text-8xl font-black tracking-tighter mb-6">00:00:00</div>
+                        
+                        <div id="shift-box" class="bg-white/10 p-4 rounded-2xl max-w-xs mx-auto backdrop-blur-md border border-white/20">
+                            <label class="block text-[10px] font-black uppercase mb-2 opacity-60">Konfirmasi Shift</label>
+                            <select id="select-shift" class="w-full bg-white text-gray-800 rounded-xl p-2.5 font-black outline-none border-none"></select>
+                        </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div id="card-in" class="bg-white p-5 rounded-2xl shadow-sm border-2 border-transparent flex justify-between items-center transition-all">
-                        <div><p class="text-xs font-bold text-gray-400 uppercase">Jam Masuk</p><p id="txt-in" class="text-2xl font-black text-gray-800">--:--</p></div>
-                        <div class="bg-gray-100 p-3 rounded-full text-gray-400"><i data-lucide="log-in" class="w-6 h-6"></i></div>
+                    <div id="card-in" class="bg-white p-6 rounded-2xl shadow-sm border-2 border-gray-100 flex justify-between items-center transition-all">
+                        <div><p class="text-[10px] font-black text-gray-400 uppercase">Masuk</p><p id="txt-in" class="text-3xl font-black text-slate-800">--:--</p></div>
+                        <div id="icon-in" class="bg-gray-50 p-4 rounded-2xl text-gray-300"><i data-lucide="log-in" class="w-8 h-8"></i></div>
                     </div>
-                    <div id="card-out" class="bg-white p-5 rounded-2xl shadow-sm border-2 border-transparent flex justify-between items-center transition-all">
-                        <div><p class="text-xs font-bold text-gray-400 uppercase">Jam Pulang</p><p id="txt-out" class="text-2xl font-black text-gray-800">--:--</p></div>
-                        <div class="bg-gray-100 p-3 rounded-full text-gray-400"><i data-lucide="log-out" class="w-6 h-6"></i></div>
+                    <div id="card-out" class="bg-white p-6 rounded-2xl shadow-sm border-2 border-gray-100 flex justify-between items-center transition-all">
+                        <div><p class="text-[10px] font-black text-gray-400 uppercase">Pulang</p><p id="txt-out" class="text-3xl font-black text-slate-800">--:--</p></div>
+                        <div id="icon-out" class="bg-gray-50 p-4 rounded-2xl text-gray-300"><i data-lucide="log-out" class="w-8 h-8"></i></div>
                     </div>
                 </div>
 
-                <div class="text-center pb-8">
-                    <button id="btn-action" onclick="processAbsen()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-black py-5 px-16 rounded-2xl shadow-xl shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-3 mx-auto">
-                        <i data-lucide="fingerprint" class="w-6 h-6"></i> CLOCK IN SEKARANG
-                    </button>
-                    <div id="msg-done" class="hidden-el bg-green-100 text-green-700 p-4 rounded-2xl font-bold flex items-center justify-center gap-2">
-                        <i data-lucide="check-circle" class="w-5 h-5"></i> Absensi Selesai! Kerja Bagus.
-                    </div>
+                <button id="btn-action" onclick="processAbsen()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-6 rounded-2xl shadow-xl shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-3">
+                    <i data-lucide="fingerprint" class="w-7 h-7"></i> KLIK UNTUK ABSEN
+                </button>
+                <div id="msg-done" class="hidden-el bg-green-500 text-white p-5 rounded-2xl font-black text-center shadow-lg shadow-green-100">
+                    Selesai! Sampai Jumpa Besok 👋
                 </div>
             </div>
 
             <!-- TAB: RIWAYAT -->
             <div id="tab-riwayat" class="hidden-el space-y-4">
-                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                    <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
-                        <h3 class="font-bold">Rekapan Absensi</h3>
-                        <i data-lucide="file-text" class="w-4 h-4 text-gray-400"></i>
+                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                    <div class="p-5 border-b flex justify-between items-center">
+                        <h3 class="font-black text-lg text-slate-800">Data Rekapan</h3>
+                        <button onclick="clearHistory()" class="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg">Reset Data</button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-gray-50 text-gray-500 uppercase text-[10px]">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 text-slate-400 text-[10px] font-black uppercase">
                                 <tr>
-                                    <th class="p-4">Tanggal</th><th class="p-4">Shift</th><th class="p-4">Masuk</th><th class="p-4">Pulang</th><th class="p-4">Status</th>
+                                    <th class="p-5">Waktu</th><th class="p-5">Shift</th><th class="p-5">Jam</th><th class="p-5">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="table-riwayat" class="divide-y"></tbody>
+                            <tbody id="table-riwayat" class="divide-y text-sm"></tbody>
                         </table>
-                        <div id="riwayat-empty" class="p-10 text-center text-gray-400">Belum ada data.</div>
+                        <div id="riwayat-empty" class="p-16 text-center text-slate-300 font-bold">Kosong</div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: ADMIN (PENGATURAN SHIFT) -->
+            <!-- TAB: ADMIN -->
             <div id="tab-admin" class="hidden-el space-y-4">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border">
-                    <h3 class="text-lg font-bold mb-4">Pengaturan Shift Kerja</h3>
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-orange-100">
+                    <div class="flex items-center gap-2 mb-6">
+                        <i data-lucide="settings-2" class="text-orange-500"></i>
+                        <h3 class="text-xl font-black text-slate-800">Atur Jam Kerja</h3>
+                    </div>
                     <div id="admin-shift-list" class="space-y-4"></div>
                 </div>
             </div>
@@ -133,39 +137,46 @@
         </main>
     </div>
 
+    <!-- FOOTER -->
+    <footer class="bg-gray-200 py-6 mt-auto">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-gray-500 font-bold text-sm tracking-widest uppercase">
+                Powered by: <span class="text-gray-700">Revie.scout</span>
+            </p>
+        </div>
+    </footer>
+
     <script>
-        // --- DATA & STATE ---
-        const users = {
+        // --- DATA PERSISTENCE ---
+        const USERS = {
             pagi: { id: 'pagi', nama: 'Revi Pagi', pin: '1234', role: 'karyawan' },
             siang: { id: 'siang', nama: 'Revi Siang', pin: '1234', role: 'karyawan' },
             admin: { id: 'admin', nama: 'Administrator', pin: 'admin', role: 'admin' }
         };
 
-        let shifts = {
-            pagi: { id: 'pagi', nama: 'Shift Pagi', mulai: '08:00', selesai: '16:00', toleransi: 15 },
-            siang: { id: 'siang', nama: 'Shift Siang', mulai: '14:00', selesai: '21:00', toleransi: 15 }
+        // Load data dari LocalStorage atau pakai default
+        let shifts = JSON.parse(localStorage.getItem('shifts')) || {
+            pagi: { id: 'pagi', nama: 'Shift Pagi', mulai: '08:00', selesai: '16:00' },
+            siang: { id: 'siang', nama: 'Shift Siang', mulai: '14:00', selesai: '22:00' }
         };
 
+        let riwayat = JSON.parse(localStorage.getItem('riwayat')) || [];
         let currentUser = null;
-        let status = 'ready'; // ready -> in -> done
-        let riwayat = [];
+        let absensiHariIni = JSON.parse(localStorage.getItem('absensiHariIni')) || { status: 'ready', in: '--:--', out: '--:--' };
 
         // --- CORE FUNCTIONS ---
         lucide.createIcons();
 
         function updateClock() {
             const now = new Date();
-            const timeEl = document.getElementById('display-time');
-            if (timeEl) {
-                timeEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
-                document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
-            }
+            document.getElementById('display-time').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
         }
         setInterval(updateClock, 1000);
 
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const u = users[document.getElementById('input-id').value];
+            const u = USERS[document.getElementById('input-id').value];
             const p = document.getElementById('input-pin').value;
 
             if (u && u.pin === p) {
@@ -173,9 +184,10 @@
                 document.getElementById('login-screen').classList.add('hidden-el');
                 document.getElementById('main-app').classList.remove('hidden-el');
                 document.getElementById('user-display').innerText = u.nama;
-                
                 if (u.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden-el');
+                
                 renderShiftSelect();
+                restoreAbsenUI();
                 lucide.createIcons();
             } else {
                 document.getElementById('login-error').classList.remove('hidden-el');
@@ -184,16 +196,17 @@
 
         function renderShiftSelect() {
             const sel = document.getElementById('select-shift');
-            sel.innerHTML = Object.values(shifts).map(s => `<option value="${s.id}">${s.nama} (${s.mulai})</option>`).join('');
+            sel.innerHTML = Object.values(shifts).map(s => `<option value="${s.id}">${s.nama} (${s.mulai} - ${s.selesai})</option>`).join('');
         }
 
         function switchTab(t) {
             ['dashboard', 'riwayat', 'admin'].forEach(tab => {
                 document.getElementById('tab-' + tab).classList.add('hidden-el');
-                document.getElementById('btn-' + tab).classList.remove('tab-active');
+                document.getElementById('btn-' + tab).classList.remove('tab-active', 'text-blue-600');
+                document.getElementById('btn-' + tab).classList.add('text-gray-400');
             });
             document.getElementById('tab-' + t).classList.remove('hidden-el');
-            document.getElementById('btn-' + t).classList.add('tab-active');
+            document.getElementById('btn-' + t).classList.add('tab-active', 'text-blue-600');
             if(t === 'riwayat') renderRiwayat();
             if(t === 'admin') renderAdmin();
         }
@@ -201,24 +214,42 @@
         function processAbsen() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('id-ID');
             
-            if (status === 'ready') {
-                status = 'in';
-                document.getElementById('txt-in').innerText = timeStr;
+            if (absensiHariIni.status === 'ready') {
+                absensiHariIni.status = 'in';
+                absensiHariIni.in = timeStr;
+                const s = shifts[document.getElementById('select-shift').value];
+                riwayat.unshift({ tgl: dateStr, shift: s.nama, in: timeStr, out: '--:--', st: 'Masuk' });
+            } else if (absensiHariIni.status === 'in') {
+                absensiHariIni.status = 'done';
+                absensiHariIni.out = timeStr;
+                riwayat[0].out = timeStr;
+                riwayat[0].st = 'Selesai';
+            }
+            
+            localStorage.setItem('absensiHariIni', JSON.stringify(absensiHariIni));
+            localStorage.setItem('riwayat', JSON.stringify(riwayat));
+            restoreAbsenUI();
+        }
+
+        function restoreAbsenUI() {
+            document.getElementById('txt-in').innerText = absensiHariIni.in;
+            document.getElementById('txt-out').innerText = absensiHariIni.out;
+
+            if (absensiHariIni.status === 'in') {
                 document.getElementById('card-in').classList.add('border-blue-500', 'bg-blue-50');
-                document.getElementById('btn-action').innerHTML = `<i data-lucide="log-out"></i> CLOCK OUT SEKARANG`;
+                document.getElementById('icon-in').classList.add('text-blue-600', 'bg-blue-100');
+                document.getElementById('btn-action').innerHTML = `<i data-lucide="log-out"></i> CLOCK OUT`;
                 document.getElementById('btn-action').classList.replace('bg-blue-600', 'bg-orange-500');
                 document.getElementById('shift-box').classList.add('opacity-50', 'pointer-events-none');
-                
-                const s = shifts[document.getElementById('select-shift').value];
-                riwayat.unshift({ tgl: new Date().toLocaleDateString('id-ID'), shift: s.nama, in: timeStr, out: '--:--', st: 'Hadir' });
-            } else if (status === 'in') {
-                status = 'done';
-                document.getElementById('txt-out').innerText = timeStr;
+            } else if (absensiHariIni.status === 'done') {
+                document.getElementById('card-in').classList.add('border-green-100', 'bg-green-50');
                 document.getElementById('card-out').classList.add('border-green-500', 'bg-green-50');
+                document.getElementById('icon-out').classList.add('text-green-600', 'bg-green-100');
                 document.getElementById('btn-action').classList.add('hidden-el');
                 document.getElementById('msg-done').classList.remove('hidden-el');
-                riwayat[0].out = timeStr;
+                document.getElementById('shift-box').classList.add('hidden-el');
             }
             lucide.createIcons();
         }
@@ -229,31 +260,59 @@
             if (riwayat.length > 0) {
                 empty.classList.add('hidden-el');
                 container.innerHTML = riwayat.map(r => `
-                    <tr class="hover:bg-gray-50">
-                        <td class="p-4 font-medium">${r.tgl}</td>
-                        <td class="p-4 text-gray-600">${r.shift}</td>
-                        <td class="p-4">${r.in}</td>
-                        <td class="p-4">${r.out}</td>
-                        <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">${r.st}</span></td>
+                    <tr class="hover:bg-slate-50 font-bold text-slate-600">
+                        <td class="p-5">${r.tgl}</td>
+                        <td class="p-5 text-slate-400 font-medium">${r.shift}</td>
+                        <td class="p-5">${r.in} - ${r.out}</td>
+                        <td class="p-5"><span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px]">${r.st}</span></td>
                     </tr>
                 `).join('');
+            } else {
+                container.innerHTML = '';
+                empty.classList.remove('hidden-el');
             }
         }
 
         function renderAdmin() {
             const list = document.getElementById('admin-shift-list');
             list.innerHTML = Object.values(shifts).map(s => `
-                <div class="p-4 bg-gray-50 rounded-xl border space-y-3">
-                    <p class="font-bold text-blue-700">${s.nama}</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="time" value="${s.mulai}" onchange="shifts['${s.id}'].mulai = this.value; renderShiftSelect();" class="p-2 rounded border">
-                        <input type="time" value="${s.selesai}" onchange="shifts['${s.id}'].selesai = this.value;" class="p-2 rounded border">
+                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+                    <p class="font-black text-slate-800 uppercase text-xs tracking-widest">${s.nama}</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase">Jam Mulai</label>
+                            <input type="time" value="${s.mulai}" onchange="saveShift('${s.id}', 'mulai', this.value)" class="w-full p-3 rounded-xl border-none font-bold text-slate-700 shadow-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase">Jam Selesai</label>
+                            <input type="time" value="${s.selesai}" onchange="saveShift('${s.id}', 'selesai', this.value)" class="w-full p-3 rounded-xl border-none font-bold text-slate-700 shadow-sm">
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function handleLogout() { location.reload(); }
+        function saveShift(id, field, value) {
+            shifts[id][field] = value;
+            localStorage.setItem('shifts', JSON.stringify(shifts));
+            renderShiftSelect();
+        }
+
+        function clearHistory() {
+            if(confirm('Hapus semua riwayat?')) {
+                localStorage.removeItem('riwayat');
+                localStorage.removeItem('absensiHariIni');
+                location.reload();
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            document.getElementById('main-app').classList.add('hidden-el');
+            document.getElementById('login-screen').classList.remove('hidden-el');
+            document.getElementById('input-id').value = '';
+            document.getElementById('input-pin').value = '';
+        }
     </script>
 </body>
 </html>
