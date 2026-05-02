@@ -151,6 +151,18 @@
         lucide.createIcons();
 
         function updateClock() {
+        const now = new Date(); // Pastikan baris ini ada
+        const timeEl = document.getElementById('display-time');
+        const dateEl = document.getElementById('display-date');
+        const greetingEl = document.getElementById('greeting-text');
+
+        if (timeEl) {
+        timeEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+        }
+        if (dateEl) {
+         dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+        {
         const hours = now.getHours();
         let greeting = "";
 
