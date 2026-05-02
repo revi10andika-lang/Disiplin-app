@@ -150,33 +150,33 @@
 
         lucide.createIcons();
 
-        function updateClock() {
+       function updateClock() {
         const now = new Date(); // Pastikan baris ini ada
         const timeEl = document.getElementById('display-time');
         const dateEl = document.getElementById('display-date');
         const greetingEl = document.getElementById('greeting-text');
 
         if (timeEl) {
-        timeEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+            timeEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
         }
         if (dateEl) {
-         dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+            dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
         }
-        {
-        const hours = now.getHours();
-        let greeting = "";
 
-        if (hours >= 5 && hours < 11) greeting = "Selamat Pagi, Semangat!";
-        else if (hours >= 11 && hours < 15) greeting = "Selamat Siang, Jangan Lupa Makan!";
-        else if (hours >= 15 && hours < 18) greeting = "Selamat Sore, Sebentar Lagi Pulang!";
-        else greeting = "Selamat Malam, Istirahat yang Cukup!";
-
-        document.getElementById('greeting-text').innerText = greeting;
-            const now = new Date();
-            document.getElementById('display-time').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
-            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+        // Bagian Salam Dinamis
+        if (greetingEl) {
+            const hours = now.getHours();
+            let greeting = "";
+            if (hours >= 5 && hours < 11) greeting = "Selamat Pagi, Semangat!";
+            else if (hours >= 11 && hours < 15) greeting = "Selamat Siang, Jangan Lupa Makan!";
+            else if (hours >= 15 && hours < 18) greeting = "Selamat Sore, Sebentar Lagi Pulang!";
+            else greeting = "Selamat Malam, Istirahat yang Cukup!";
+             greetingEl.innerText = greeting;
         }
-        setInterval(updateClock, 1000);
+    }
+    // Baris di bawah ini SANGAT PENTING agar jam berdetak tiap detik
+    setInterval(updateClock, 1000); 
+    updateClock(); // Panggil sekali di awal agar tidak menunggu 1 detik
 
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
